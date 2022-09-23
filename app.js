@@ -8,8 +8,6 @@ function toggleToDos() {
     const toDo = document.querySelectorAll('li');
 
     for (let li of toDo) {
-        if (li.classList === '') {
-            li.classList.toggle('finished');
-        }
+        li.classList.toggle('finished');
     }
 }
