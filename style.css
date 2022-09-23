@@ -1,3 +1,8 @@
-.finished-item {
+.todos {
+    color: red;
+}
+
+.finished {
     text-decoration: line-through;
+    color: gray;
 }
