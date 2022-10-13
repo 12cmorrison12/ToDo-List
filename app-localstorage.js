@@ -2,33 +2,57 @@ const toDoList = document.querySelector('ul');
 const submitList = document.getElementById('listform');
 
 const savedList = JSON.parse(localStorage.getItem('savedlist')) || [];
-for (let todo of savedList) {
-    todo = document.createElement('li');
-    todo.innerText = savedList.task;
-
-    if(todo.isCompleted === true) {
-        todo.className = 'finished';
-    }
+for (let task of savedList) {
+    let todo = document.createElement('li');
+    let span = document.createElement('span');
+    span.innerText = task[0];
+    if (task[1] === true) {
+        span.classList.add("finished");
+    } else {
+        span.classList.add("todos")
+    };
+    todo.append(span);
     toDoList.appendChild(todo);
 }
 
-submitList.addEventListener('submit', function(e) {
+submitList.addEventListener('submit', function (e) {
     e.preventDefault();
 
     const newItem = document.createElement('li');
+    const span = document.createElement('span');
     const item = document.getElementById('input').value;
 
-    newItem.innerText = item;
-    toDoList.appendChild(newItem);
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete';
+    deleteBtn.innerText = 'x';
 
-    savedList.push(newTodo.innerText);
-    localStorage.setItem('savedlist');
+    span.innerText = item;
+    span.className = 'todos';
+    newItem.append(span);
+    toDoList.appendChild(newItem);
+    newItem.append(deleteBtn);
+
+    savedList.push([item, false]);
+    localStorage.setItem('savedlist', JSON.stringify(savedList));
 });
 
-toDoList.addEventListener('click', function(e) {
-    if(e.target.className === 'li') {
-        e.target.className.toggle('finished');
-    } else if (e.target.className === 'delete') {
-        e.target.className.remove();
+toDoList.addEventListener('click', function (e) {
+    console.log(e.target.className)
+    if (e.target.className === 'todos') {
+        e.target.className = 'finished';
+        for (let index = 0; index < savedList.length; index++) {
+            if (e.target.textContent === savedList[index][0]) {
+                savedList[index][1] = true;
+                break;
+            }
+        }
+    } else if (e.target.tagName === 'BUTTON') {
+        for (let index = 0; index < savedList.length; index++) {
+            if (e.target.parentNode.childNodes[0].textContent === savedList[index][0]) {
+                savedList.splice(index, 1);
+                e.target.parentNode.remove();
+            }
+        }
     }
+    localStorage.setItem('savedlist', JSON.stringify(savedList));
 });
